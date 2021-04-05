@@ -252,42 +252,81 @@ async def give(ctx, member: discord.Member, amt=None):
     bank = users[str(member.id)]["Wallet"]
     await ctx.send(f"<@{user.id}> You sent **{amt}** coins to <@{member.id}> Now you have **{wallet}** in your wallet, and they have **{bank}** in their wallet!")
 
-#slots bois
+
+
+
 @client.command(aliases=["Slots"])
 @commands.cooldown(1, 5, commands.BucketType.user) 
 async def slots(ctx, amt):
     await open_account(ctx.author)
+
     await open_account_gamble(ctx.author)
     user = ctx.author
+
     gamble = await get_gamble_data()
+
     if amt == None:
         await ctx.send("Please enter a valid amount")
+
         return
     amt = int(amt)
+
     bal = await update_bank(ctx.author)
+
     if amt > bal[0]:
         await ctx.send(f"<@{ctx.author.id}> you don't have that much!")
+
         return
+
     if amt < 0:
         await ctx.send(f"<@{ctx.author.id}> amount must be positive!")
+
         return
+
     emoji_set_1 = random.choice([":middle_finger:",":flushed:"])
+
     emoji_set_2 = random.choice([":eggplant:",":peach:",":eyes:"])
+
     emoji_set_3 = random.choice([":star2:",":alien:"])
+
     final = []
+
     for i in range(3):
       a = random.choice([emoji_set_1, emoji_set_2, emoji_set_3])
+
       final.append(a)
+
     multi = gamble[str(user.id)]["multi"]
+
     if final[0]  == final[1] or final[1]  == final[2]:
+
       if multi >= 0 and multi <= 21:
+
         answer1 = random.uniform(0.1, 0.9)
+
         roudning = round(answer1 * amt)
+
         await update_bank(ctx.author, + roudning)
-        await ctx.send(f"you won~!!!!!!!{final}")
+
+        msg = " ".join(final)
+
+        await ctx.send(f"you won~!!!!!!! {msg}")
+
     else:
       await update_bank(ctx.author, -amt)
-      await ctx.send(f"you lost {amt} coins")
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #help cmd
 @client.group(name="help", invoke_without_command=True)
